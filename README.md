@@ -3,4 +3,3 @@ It is a study portal where students can manage their daily tasks like a to-do li
 ![Screenshot 2024-05-18 142909](https://github.com/suss58/Student-study-portal-task-management-system/blob/main/Screenshot%202024-05-22%20205929.png)
 ![Screenshot 2024-05-18 142909](https://github.com/suss58/Student-study-portal-task-management-system/blob/main/Screenshot%202024-05-22%20210007.png)
 ![Screenshot 2024-05-18 142909](https://github.com/suss58/Student-study-portal-task-management-system/blob/main/Screenshot%202024-05-22%20210037.png)
-![Screenshot 2024-05-18 142909](https://github.com/suss58/Student-study-portal-task-management-system/blob/main/Screenshot%202024-05-22%20210007.png)
