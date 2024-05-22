@@ -1,9 +1,16 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from .forms import *
 from .forms import NotesForm
 from django.contrib import messages
 from .models import Homework, Notes
 from django.views import generic
+from .forms import Dashboardform 
+from youtube_search import YoutubeSearch
+
+
+
+
+
 
 def home(request):
     return render(request, 'dashboard/home.html')
@@ -82,3 +89,55 @@ def update_homework(request,pk=None):
         homework.is_finished=True
     homework.save()
     return redirect('homework')
+
+# def delete_homework(request, pk=None):
+#     Homework.objects.get(id=pk).delete()
+#     return redirect("homework")
+
+
+def delete_homework(request, pk=None):
+    homework = get_object_or_404(Homework, id=pk)
+    if homework.is_finished:
+        homework.delete()
+        messages.success(request, "Homework deleted successfully.")
+    else:
+        messages.error(request, "Homework cannot be deleted because it is not completed.")
+    return redirect('homework')
+
+def youtube(request):
+    if request.method == "POST":
+        form = Dashboardform(request.POST)
+        if form.is_valid():
+            text = form.cleaned_data['text']
+            results = YoutubeSearch(text, max_results=20).to_dict() # type: ignore
+            videos = [{'title': video['title'], 'url': f"https://www.youtube.com/watch?v={video['id']}"}
+                      for video in results]
+            result_list=[]
+            for i  in videos.result()['result']:
+                result_divt={
+                    'input':text,
+                    'title':i['title'],
+                    'duration':i['duration'],
+                    'thimbnails':i['thimbnails'],
+                    'channel':i['channel']['name'],
+                    'link':i['link'],
+                    'views':i['viewCount']['short'],
+                    'published':i['publishTime'],
+
+                }
+                desc=''
+                if i['descriptionSnippet']:
+                    for j in i['descriptionSnipp']:
+                        desc+=j['text']
+                result_divt['description']=desc
+                result_list.append(result_divt)
+                context={
+                    'form':form,
+                    'result':result_divt
+                }
+            return render(request, 'dashboard/youtube.html', context)
+    else:
+        form = Dashboardform()
+        videos = []
+    context = {'form': form, 'videos': videos}
+    return render(request, 'dashboard/youtube.html', context)
